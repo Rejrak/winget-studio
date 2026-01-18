@@ -1,0 +1,50 @@
+.actions-col {
+  width: 210px;
+  min-width: 190px;
+}
+
+.installed-grid {
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 1280px) {
+  .installed-grid {
+    grid-template-columns: 2fr 1fr;
+  }
+}
+
+.installed-col {
+  min-width: 0;
+}
+
+.icon-btn {
+  height: 32px;
+  width: 32px;
+  border-radius: 12px;
+  border: 1px solid hsla(0, 0%, 100%, 0.12);
+  background: hsla(0, 0%, 100%, 0.06);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #e2e8f0;
+  transition: background 0.15s ease, border 0.15s ease;
+}
+
+.icon-btn:hover {
+  background: hsla(0, 0%, 100%, 0.12);
+}
+
+.log-mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+.log-scroll {
+  max-height: 200px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.log-line {
+  white-space: pre-wrap;
+  word-break: break-word;
+}

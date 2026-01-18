@@ -1,0 +1,85 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+body {
+  font-family: "IBM Plex Sans", "Segoe UI", sans-serif;
+}
+
+h1, h2, h3 {
+  font-family: "Space Grotesk", "IBM Plex Sans", sans-serif;
+  letter-spacing: -0.02em;
+}
+
+.bg-mesh {
+  background:
+    radial-gradient(60% 40% at 10% 10%, rgba(249,115,22,0.25), transparent 55%),
+    radial-gradient(50% 40% at 90% 0%, rgba(45,212,191,0.18), transparent 50%),
+    radial-gradient(40% 40% at 70% 90%, rgba(251,113,133,0.18), transparent 45%),
+    #0b0f17;
+}
+
+.noise {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='0.18'/%3E%3C/svg%3E");
+  mix-blend-mode: soft-light;
+  pointer-events: none;
+}
+
+.drag-region {
+  -webkit-app-region: drag;
+}
+
+.no-drag,
+.window-btn {
+  -webkit-app-region: no-drag;
+}
+
+.window-btn {
+  height: 32px;
+  width: 32px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.06);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #e2e8f0;
+  transition: transform 0.15s ease, background 0.15s ease, border 0.15s ease;
+}
+
+.window-btn:hover {
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.window-btn:active {
+  transform: translateY(0);
+}
+
+.window-btn-close {
+  border-color: rgba(251, 113, 133, 0.4);
+  background: rgba(251, 113, 133, 0.16);
+  color: #fecdd3;
+}
+
+.window-btn-close:hover {
+  background: rgba(251, 113, 133, 0.28);
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  height: 10px;
+  width: 10px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.35);
+  border-radius: 999px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.6);
+}

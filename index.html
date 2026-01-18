@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Winget Studio</title>
+
+  <link rel="stylesheet" href="./assets/styles/fonts.css" />
+  <link rel="stylesheet" href="./assets/styles/app.css" />
+  <link rel="stylesheet" href="./assets/styles/custom.css" />
+</head>
+
+<body class="bg-ink text-slate-100 min-h-screen">
+  <div class="fixed inset-0 -z-10 bg-mesh"></div>
+  <div class="fixed inset-0 -z-10 opacity-40 noise"></div>
+
+  <div class="min-h-screen flex flex-col">
+    <!-- HEADER -->
+    <header class="sticky top-0 z-30 drag-region border-b border-white/10 bg-black/30 backdrop-blur-xl">
+      <div class="w-full px-5 py-3 flex items-center justify-between">
+        <!-- SX: logo + titolo -->
+        <div class="space-y-1">
+          <div class="flex items-center gap-3">
+            <div class="h-10 w-10 rounded-2xl bg-accent/20 border border-accent/30 flex items-center justify-center">
+            <img src="./assets/icons/icon-32.png" class="h-8 w-8 rounded-xl" alt="Winget Studio logo" />
+            </div>
+            <div>
+              <h1 class="text-xl font-semibold tracking-tight" data-i18n="app.name">Winget Studio</h1>
+              <p class="text-xs text-slate-400" data-i18n="app.tagline">
+                Esperienza headless e pulita per installare, aggiornare e rimuovere app.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- DX: chip, lingua, tasti finestra (tutti insieme sulla destra) -->
+        <div class="flex flex-wrap items-center justify-end gap-3 no-drag">
+          <div class="flex items-center gap-2 text-[11px] uppercase tracking-widest text-slate-400">
+            <span class="px-2 py-1 rounded-full border border-white/10 bg-white/5" data-i18n="badge.production">
+              Production
+            </span>
+            <span class="px-2 py-1 rounded-full border border-accent/40 bg-accent/10 text-accent">
+              Winget
+            </span>
+          </div>
+
+          <select id="languageSelect"
+            class="px-2 py-1 rounded-xl bg-panelStrong border border-white/10 text-[11px] uppercase tracking-widest text-slate-300"
+            data-i18n-aria="language.label" aria-label="Seleziona lingua">
+            <option value="it">IT</option>
+            <option value="en">EN</option>
+          </select>
+
+          <div class="flex items-center gap-2">
+            <button class="window-btn" data-window-control="minimize" data-i18n-aria="window.minimize"
+              data-i18n-title="window.minimize" aria-label="Minimizza finestra" title="Minimizza">
+              <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M6 12h12" stroke-linecap="round" />
+              </svg>
+            </button>
+            <button class="window-btn" data-window-control="maximize" data-i18n-aria="window.maximize"
+              data-i18n-title="window.maximize" aria-label="Massimizza finestra" title="Massimizza">
+              <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="6" y="6" width="12" height="12" rx="2"></rect>
+              </svg>
+            </button>
+            <button class="window-btn window-btn-close" data-window-control="close" data-i18n-aria="window.close"
+              data-i18n-title="window.close" aria-label="Chiudi finestra" title="Chiudi">
+              <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M6 6l12 12M18 6l-12 12" stroke-linecap="round" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- MAIN -->
+    <main class="flex-1">
+      <div class="max-w-7xl mx-auto px-5 py-8 space-y-8">
+        <!-- CATALOG -->
+        <section class="bg-panel/80 border border-white/10 rounded-3xl shadow-glow p-6 space-y-5">
+          <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+            <div class="space-y-2">
+              <h2 class="text-2xl font-semibold" data-i18n="sections.catalog">Catalogo Winget</h2>
+              <p id="catalogStatus" class="text-xs text-slate-400" role="status" aria-live="polite"
+                data-i18n="catalog.idle">
+                Inserisci un nome o un ID per trovare nuove app.
+              </p>
+            </div>
+            <div id="catalogMeta" class="text-xs text-slate-500" data-i18n="catalog.metaIdle">
+              Nessuna ricerca eseguita.
+            </div>
+          </div>
+
+          <div class="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between no-drag">
+            <div class="relative flex-1">
+              <span class="pointer-events-none absolute inset-y-0 left-3 flex items-center text-slate-500">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                  stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 104.5 4.5a7.5 7.5 0 0012.15 12.15z" />
+                </svg>
+              </span>
+              <input id="catalogSearchInput" type="text"
+                placeholder="Cerca nel catalogo (es. chrome, vscode, docker, 7zip)"
+                data-i18n-placeholder="placeholders.catalogSearch" class="w-full pl-9 pr-3 py-2.5 rounded-xl bg-panelStrong border border-white/10
+                       text-sm placeholder:text-slate-500
+                       focus:outline-none focus:ring-2 focus:ring-mint/60 focus:border-transparent" />
+            </div>
+
+            <button id="catalogSearchBtn" class="px-4 py-2 rounded-xl bg-mint hover:bg-teal-400 text-xs font-semibold
+                     uppercase tracking-wide shadow-sm shadow-teal-900/40 transition-colors"
+              data-i18n="actions.search">
+              Cerca
+            </button>
+          </div>
+
+          <div class="border border-white/10 rounded-2xl overflow-hidden">
+            <div class="w-full overflow-x-auto">
+              <div class="max-h-[360px] overflow-y-auto scrollbar-thin">
+                <table class="w-full min-w-[640px] table-fixed text-sm">
+                  <thead class="bg-black/40 sticky top-0 z-10">
+                    <tr>
+                      <th class="text-left px-4 py-2 text-xs font-semibold text-slate-300" data-i18n="table.name">Nome
+                      </th>
+                      <th class="text-left px-4 py-2 text-xs font-semibold text-slate-300" data-i18n="table.id">ID</th>
+                      <th class="text-left px-4 py-2 text-xs font-semibold text-slate-300" data-i18n="table.version">
+                        Versione</th>
+                      <th class="text-left px-4 py-2 text-xs font-semibold text-slate-300" data-i18n="table.source">
+                        Source</th>
+                      <th class="px-4 py-2 text-right text-xs font-semibold text-slate-300" data-i18n="table.actions">
+                        Azioni</th>
+                    </tr>
+                  </thead>
+                  <tbody id="catalogTableBody" class="divide-y divide-white/5 bg-black/20">
+                    <!-- require catalogo -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <p class="text-[11px] text-slate-500" data-i18n="catalog.note">
+            Nota: alcuni pacchetti del Microsoft Store potrebbero richiedere permessi aggiuntivi.
+          </p>
+        </section>
+
+        <!-- installed programs -->
+        <section class="bg-panel/80 border border-white/10 rounded-3xl shadow-glow p-6 space-y-5">
+          <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+            <div class="space-y-2">
+              <h2 class="text-2xl font-semibold" data-i18n="sections.installed">Programmi installati</h2>
+              <p id="appsStatus" class="text-xs text-slate-400" role="status" aria-live="polite"
+                data-i18n="status.initialLoading">
+                Caricamento iniziale...
+              </p>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-3 no-drag">
+              <div class="flex items-center gap-2 px-3 py-2 rounded-xl bg-white/5 border border-white/10">
+                <span class="text-[11px] uppercase tracking-widest text-slate-400" data-i18n="stats.total">Totale</span>
+                <span id="appsTotalCount" class="text-sm font-semibold">0</span>
+              </div>
+              <div class="flex items-center gap-2 px-3 py-2 rounded-xl bg-white/5 border border-white/10">
+                <span class="text-[11px] uppercase tracking-widest text-slate-400"
+                  data-i18n="stats.upgradable">Aggiornabili</span>
+                <span id="appsUpgradableCount" class="text-sm font-semibold text-accent">0</span>
+              </div>
+              <div class="flex items-center gap-2 px-3 py-2 rounded-xl bg-white/5 border border-white/10">
+                <span class="text-[11px] uppercase tracking-widest text-slate-400" data-i18n="stats.lastSync">Ultimo
+                  sync</span>
+                <span id="appsLastSync" class="text-sm font-semibold text-slate-200">--:--</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- All in one col -->
+          <div class="space-y-4 installed-col">
+            <!-- search + filters -->
+            <div class="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between no-drag">
+              <div class="relative flex-1">
+                <span class="pointer-events-none absolute inset-y-0 left-3 flex items-center text-slate-500">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 104.5 4.5a7.5 7.5 0 0012.15 12.15z" />
+                  </svg>
+                </span>
+                <input id="appsSearchInput" type="text" placeholder="Cerca per nome o ID (es. JetBrains, vscode, Steam)"
+                  data-i18n-placeholder="placeholders.appsSearch" class="w-full pl-9 pr-3 py-2.5 rounded-xl bg-panelStrong border border-white/10
+                         text-sm placeholder:text-slate-500
+                         focus:outline-none focus:ring-2 focus:ring-accent/60 focus:border-transparent" />
+              </div>
+
+              <div class="flex flex-wrap items-center gap-2">
+                <label
+                  class="flex items-center gap-2 text-xs text-slate-300 px-3 py-2 rounded-xl bg-white/5 border border-white/10">
+                  <input id="appsOnlyUpgradable" type="checkbox" class="accent-orange-500 h-4 w-4" />
+                  <span data-i18n="filters.onlyUpgradable">Solo aggiornabili</span>
+                </label>
+                <label
+                  class="flex items-center gap-2 text-xs text-slate-300 px-3 py-2 rounded-xl bg-white/5 border border-white/10">
+                  <input id="appsSelectAllUpgradable" type="checkbox" class="accent-orange-500 h-4 w-4" />
+                  <span data-i18n="filters.selectAllUpgradable">Tutte le aggiornabili</span>
+                </label>
+
+                <select id="appsSortSelect"
+                  class="px-3 py-2 rounded-xl bg-panelStrong border border-white/10 text-xs text-slate-200">
+                  <option value="name" data-i18n="filters.sortName">Ordina: Nome</option>
+                  <option value="status" data-i18n="filters.sortStatus">Ordina: Stato</option>
+                  <option value="version" data-i18n="filters.sortVersion">Ordina: Versione</option>
+                </select>
+
+                <button id="appsUpgradeSelectedBtn" class="min-w-[132px] px-4 py-2 rounded-xl bg-slate-700/70 hover:bg-slate-600 text-xs font-semibold
+                         uppercase tracking-wide shadow-sm shadow-slate-900/40 transition-colors"
+                  data-i18n="actions.upgradeSelected">
+                  Aggiorna selezionate
+                </button>
+
+                <button id="appsRefreshBtn" class="min-w-[132px] px-4 py-2 rounded-xl bg-accent hover:bg-orange-500 text-xs font-semibold
+                         uppercase tracking-wide shadow-sm shadow-orange-900/40 transition-colors"
+                  data-i18n="actions.refreshList">
+                  Aggiorna lista
+                </button>
+              </div>
+            </div>
+
+            <!-- tables -->
+            <div class="border border-white/10 rounded-2xl overflow-hidden">
+              <div class="w-full overflow-x-auto">
+                <div class="max-h-[360px] overflow-y-auto scrollbar-thin">
+                  <table class="w-full min-w-[720px] table-fixed text-sm">
+                    <thead class="bg-black/40 sticky top-0 z-10">
+                      <tr>
+                        <th class="text-left px-4 py-2 text-xs font-semibold text-slate-300" data-i18n="table.name">
+                          Nome</th>
+                        <th class="text-left px-4 py-2 text-xs font-semibold text-slate-300" data-i18n="table.id">ID
+                        </th>
+                        <th class="text-left px-4 py-2 text-xs font-semibold text-slate-300" data-i18n="table.version">
+                          Versione</th>
+                        <th class="text-left px-4 py-2 text-xs font-semibold text-slate-300" data-i18n="table.status">
+                          Stato</th>
+                        <th class="px-4 py-2 text-right text-xs font-semibold text-slate-300 actions-col"
+                          data-i18n="table.actions">Azioni</th>
+                      </tr>
+                    </thead>
+                    <tbody id="appsTableBody" class="divide-y divide-white/5 bg-black/20">
+                      <!-- row generated by renderer.js -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <!-- bottom panels: activities, log, tips -->
+            <div class="space-y-4">
+              <div class="rounded-2xl border border-white/10 bg-black/30 p-4">
+                <h3 class="text-sm font-semibold text-slate-200" data-i18n="activity.title">Attivita recenti</h3>
+                <p class="text-xs text-slate-400" data-i18n="activity.subtitle">
+                  Operazioni winget in corso e completate.
+                </p>
+                <div class="mt-3 max-h-[240px] overflow-y-auto scrollbar-thin">
+                  <ul id="activityList" class="space-y-2 text-xs text-slate-300">
+                    <li class="text-slate-500" data-i18n="activity.empty">Nessuna attivita registrata.</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="rounded-2xl border border-white/10 bg-black/30 p-4">
+                <div class="flex items-start justify-between gap-3">
+                  <div class="space-y-1">
+                    <h3 class="text-sm font-semibold text-slate-200" data-i18n="logs.title">Log operazioni</h3>
+                    <p class="text-xs text-slate-400" data-i18n="logs.subtitle">
+                      Output dei comandi winget in esecuzione.
+                    </p>
+                  </div>
+                  <button id="logClearBtn" class="icon-btn" data-i18n-aria="logs.clear" data-i18n-title="logs.clear"
+                    aria-label="Pulisci log" title="Pulisci log">
+                    <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M3 6h18M8 6V4h8v2M7 6l1 14a2 2 0 002 2h4a2 2 0 002-2l1-14M10 11v6M14 11v6" />
+                    </svg>
+                  </button>
+                </div>
+                <div class="mt-3 log-scroll scrollbar-thin log-mono">
+                  <div id="operationLogList" class="space-y-2 text-[11px] text-slate-300"></div>
+                </div>
+              </div>
+
+              <div class="rounded-2xl border border-white/10 bg-black/30 p-4 space-y-2">
+                <h3 class="text-sm font-semibold text-slate-200" data-i18n="tips.title">Suggerimenti rapidi</h3>
+                <p class="text-xs text-slate-400" data-i18n="tips.body">
+                  Usa la ricerca per filtrare velocemente pacchetti. I pulsanti azione hanno focus visivo.
+                </p>
+                <div class="flex flex-wrap gap-2 text-[11px]">
+                  <span class="px-2 py-1 rounded-full border border-white/10 bg-white/5 text-slate-300"
+                    data-i18n="tips.enterSearch">Invio = cerca</span>
+                  <span class="px-2 py-1 rounded-full border border-white/10 bg-white/5 text-slate-300"
+                    data-i18n="tips.refresh">Aggiorna = refresh</span>
+                  <span class="px-2 py-1 rounded-full border border-white/10 bg-white/5 text-slate-300"
+                    data-i18n="tips.confirm">Confirm = sicurezza</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <div id="toastStack" class="fixed bottom-6 right-6 space-y-2 z-50"></div>
+
+  <script src="./renderer.js"></script>
+</body>
+
+</html>
