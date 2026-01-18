@@ -1,5 +1,6 @@
 {
   "name": "winget-studio",
+  "author": "Roberto Lucchetti",
   "version": "0.1.0",
   "license": "SEE LICENSE IN LICENSE.txt",
   "description": "Winget Studio - desktop UI for installing, updating, and removing apps with winget.",
